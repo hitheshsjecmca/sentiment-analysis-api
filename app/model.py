@@ -24,31 +24,15 @@ def analyze_sentiment(text: str):
 
 
 def analyze_emotion(text: str):
-    print("DEBUG: Emotion function called")
+    results = emotion_pipeline(text)
 
-    if emotion_pipeline is None:
-        return {"error": "Emotion model not available"}
+    emotions = {}
+    for item in results:
+        emotions[item["label"]] = round(item["score"], 3)
 
-    try:
-        results = emotion_pipeline(text)
-        print("DEBUG RESULTS:", results)
+    # Sort and take top 3  
+    sorted_emotions = dict(
+        sorted(emotions.items(), key=lambda x: x[1], reverse=True)[:3]
+    )
 
-        emotion_dict = {}
-
-        # Case 1: multiple emotions (list of dicts)
-        if isinstance(results, list) and isinstance(results[0], dict):
-            for item in results:
-                emotion_dict[item["label"]] = item["score"]
-
-        # Case 2: nested list (rare case)
-        elif isinstance(results, list) and isinstance(results[0], list):
-            for item in results[0]:
-                emotion_dict[item["label"]] = item["score"]
-
-        else:
-            return {"error": "Unexpected format"}
-
-        return emotion_dict
-
-    except Exception as e:
-        return {"error": str(e)}
+    return sorted_emotions
