@@ -6,7 +6,7 @@ app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "Sentiment & Emotion API 🚀"}
+    return {"message": "Sentiments & Emotion API 🚀"}
 
 @app.post("/analyze")
 def analyze(request: TextRequest):
